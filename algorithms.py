@@ -15,7 +15,7 @@ class LinearProgram:
     cost_vector: np.array
     optimum_configuration = {
         'baseindex': [],
-        'optimum': float("-inf"),
+        'optimum': float('-inf'),
     }
 
 
@@ -41,21 +41,26 @@ def exhaustive_search(lp: LinearProgram):
 
         # Check linear independence
         if not np.linalg.matrix_rank(M=base) == m:
-            print(f"{base} is no base solution (not invertable).")
+            print(f'{base} is no base solution (not invertable).')
             break
         else:
             # if independent solve constraints for cost coefficients
             cost_coefficients = np.linalg.solve(base.T, lp.constraint_values)
-            targetvalue = np.sum(np.dot(cost_coefficients, lp.cost_vector[:, baseindex]))
 
-            # if targetvalue is new current optimum
-            if targetvalue > lp.optimum_configuration['optimum']:
-                lp.optimum_configuration['optimum'] = targetvalue
-                lp.optimum_configuration['baseindex'] = baseindex
+            if not all(cost_coefficients > 0):
+                print(f'{base} is no valid base solution (Coefficients < 0).')
+                break
+            else:
+                targetvalue = np.sum(np.dot(cost_coefficients, lp.cost_vector[:, baseindex]))
 
-            # target has the same value as current optimum
-            elif targetvalue == lp.optimum_configuration['optimum']:
-                lp.optimum_configuration['baseindex'].add(baseindex)
+                # if targetvalue is new current optimum
+                if targetvalue > lp.optimum_configuration['optimum']:
+                    lp.optimum_configuration['optimum'] = targetvalue
+                    lp.optimum_configuration['baseindex'] = baseindex
+
+                # target has the same value as current optimum
+                elif targetvalue == lp.optimum_configuration['optimum']:
+                    lp.optimum_configuration['baseindex'].add(baseindex)
 
     solution_space_size = len(lp.optimum_configuration['baseindex'])
 

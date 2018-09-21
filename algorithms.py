@@ -34,7 +34,6 @@ def exhaustive_search(lp: LinearProgram):
 
     # permutation sets with length m of all bases
     B = set(permutations(range(Blen), m))
-
     for baseindex in B:
         baseindex = list(baseindex)
         base = lp.constraints[:, baseindex]
@@ -42,25 +41,25 @@ def exhaustive_search(lp: LinearProgram):
         # Check linear independence
         if not np.linalg.matrix_rank(M=base) == m:
             print(f'{base} is no base solution (not invertable).')
-            break
+            continue
         else:
             # if independent solve constraints for cost coefficients
             cost_coefficients = np.linalg.solve(base.T, lp.constraint_values)
 
             if not all(cost_coefficients > 0):
                 print(f'{base} is no valid base solution (Coefficients < 0).')
-                break
+                continue
             else:
                 targetvalue = np.sum(np.dot(cost_coefficients, lp.cost_vector[:, baseindex]))
 
                 # if targetvalue is new current optimum
                 if targetvalue > lp.optimum_configuration['optimum']:
                     lp.optimum_configuration['optimum'] = targetvalue
-                    lp.optimum_configuration['baseindex'] = baseindex
+                    lp.optimum_configuration['baseindex'] = [baseindex]
 
                 # target has the same value as current optimum
                 elif targetvalue == lp.optimum_configuration['optimum']:
-                    lp.optimum_configuration['baseindex'].add(baseindex)
+                    lp.optimum_configuration['baseindex'].append(baseindex)
 
     solution_space_size = len(lp.optimum_configuration['baseindex'])
 
@@ -78,9 +77,11 @@ def exhaustive_search(lp: LinearProgram):
             print(f'''
                     Linear Program exactly one optimal solution. 
                     Target function value: {lp.optimum_configuration['optimum']}.
+                    
                     No of solutions found {solution_space_size}.
                    ''')
-        return {'maximum': lp.optimum_configuration['optimum'],
-                'baseindex': lp.optimum_configuration['baseindex']}
+        print({'maximum': lp.optimum_configuration['optimum'],
+                'baseindex': lp.optimum_configuration['baseindex']})
     else:
-        print('Linear Program no valid solution. Solution space is empty.')
+        print('Linear Program no has valid solution. Solution space is empty.')
+        return None

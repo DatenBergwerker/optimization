@@ -1,22 +1,24 @@
-from dataclasses import dataclass
+# from dataclasses import dataclass
 from itertools import permutations
 import numpy as np
 
 
-@dataclass
 class LinearProgram:
     """
     A utility object representing the linear program in normal form as three
     distinct matrices: constraints (A), constraint_values (b) and
     the cost vector (c).
     """
-    constraints: np.array
-    constraint_values: np.array
-    cost_vector: np.array
-    optimum_configuration = {
-        'baseindex': [],
-        'optimum': float('-inf'),
-    }
+
+    def __init__(self, constraints: np.array, constraint_values: np.array,
+                 cost_vector: np.array):
+        self.constraints = constraints
+        self.constraint_values = constraint_values
+        self.cost_vector = cost_vector
+        self.optimum_configuration = {
+            'base_solution': set(),
+            'optimum': float('-inf'),
+        }
 
 
 def exhaustive_search(lp: LinearProgram):
@@ -26,6 +28,12 @@ def exhaustive_search(lp: LinearProgram):
     :param lp: The LP in normalform.
     :return:
     """
+    # reset lp
+    lp.optimum_configuration = {
+        'base_solution': set(),
+        'optimum': float('-inf'),
+    }
+
     # matrix row dimensions (no of constraints)
     m = lp.constraint_values.shape[0]
 
@@ -40,28 +48,29 @@ def exhaustive_search(lp: LinearProgram):
 
         # Check linear independence
         if not np.linalg.matrix_rank(M=base) == m:
-            print(f'{base} is no base solution (not invertable).')
+            # print(f'{base} is no base solution (not invertable).')
             continue
         else:
             # if independent solve constraints for cost coefficients
-            cost_coefficients = np.linalg.solve(base.T, lp.constraint_values)
+            cost_coefficients = np.linalg.solve(base, lp.constraint_values)
 
             if not all(cost_coefficients > 0):
-                print(f'{base} is no valid base solution (Coefficients < 0).')
+                # print(f'{base} is no valid base solution (Coefficients < 0).')
                 continue
             else:
-                targetvalue = np.sum(np.dot(cost_coefficients, lp.cost_vector[:, baseindex]))
+                # compute inner (elementwise) product
+                targetvalue = np.sum(np.inner(cost_coefficients.T, lp.cost_vector[:, baseindex]))
+                base_solution = np.zeros(Blen)
+                base_solution[baseindex] = cost_coefficients.T
 
                 # if targetvalue is new current optimum
-                if targetvalue > lp.optimum_configuration['optimum']:
-                    lp.optimum_configuration['optimum'] = targetvalue
-                    lp.optimum_configuration['baseindex'] = [baseindex]
+                if targetvalue >= lp.optimum_configuration['optimum']:
+                    if targetvalue > lp.optimum_configuration['optimum']:
+                        print(f'New optimum {targetvalue}')
+                        lp.optimum_configuration['optimum'] = targetvalue
+                    lp.optimum_configuration['base_solution'].add(tuple(base_solution))
 
-                # target has the same value as current optimum
-                elif targetvalue == lp.optimum_configuration['optimum']:
-                    lp.optimum_configuration['baseindex'].append(baseindex)
-
-    solution_space_size = len(lp.optimum_configuration['baseindex'])
+    solution_space_size = len(lp.optimum_configuration['base_solution'])
 
     # solution space is not empty
     if solution_space_size:
@@ -77,11 +86,8 @@ def exhaustive_search(lp: LinearProgram):
             print(f'''
                     Linear Program exactly one optimal solution. 
                     Target function value: {lp.optimum_configuration['optimum']}.
-                    
-                    No of solutions found {solution_space_size}.
                    ''')
-        print({'maximum': lp.optimum_configuration['optimum'],
-                'baseindex': lp.optimum_configuration['baseindex']})
+
+        print(f'''Valid base solutions: {lp.optimum_configuration['base_solution']}''')
     else:
         print('Linear Program no has valid solution. Solution space is empty.')
-        return None

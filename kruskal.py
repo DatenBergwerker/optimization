@@ -1,16 +1,5 @@
 import numpy as np
 
-incidence_matrix = np.array([
-    [1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 1, 1, 1, 0, 0],
-    [0, 1, 0, 1, 1, 0, 0, 1, 0],
-    [0, 0, 0, 0, 0, 1, 0, 1, 1],
-    [0, 0, 0, 0, 0, 0, 1, 0, 1]
-])
-
-edge_costs = np.array([2, 8, 2, 4, 1, 4, 8, 2, 2])
-
 
 def check_incidence_matrix(incidence_matrix: np.array):
     """
@@ -59,6 +48,3 @@ def kruskal_mst(incidence_matrix: np.array, edge_costs: np.array):
             print(f"Edge e{edge + 1} would lead to a circle in the minimum spanning tree.")
 
     return correct_zero_offset(edge_list=used_edges), total_cost
-
-
-x, y = kruskal_mst(incidence_matrix=incidence_matrix, edge_costs=edge_costs)

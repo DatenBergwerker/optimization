@@ -1,5 +1,7 @@
 import numpy as np
-from algorithms import LinearProgram, exhaustive_search
+
+from LinearOptimization.exhaustive_search import exhaustive_search
+from LinearOptimization.linear_program import LinearProgram
 
 problems = [
     {'Description': 'Exercise 3.3, First Example',

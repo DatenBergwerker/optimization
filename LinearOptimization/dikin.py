@@ -5,7 +5,7 @@ class LinearProgram:
     """
     A utility object representing the linear program in normal form as three
     distinct matrices: constraints (A), constraint_values (b) and
-    the cost vector (c). It also contains
+    the cost vector (c). It is an adaption for the dikin case.
     """
 
     def __init__(self, constraints: np.array, constraint_values: np.array,

@@ -1,8 +1,11 @@
 import sys
 sys.path.append('')
+
 import numpy as np
-from simplex import simplex
-from simplex import LinearProgram
+
+from LinearOptimization.simplex import simplex
+from LinearOptimization.linear_program import LinearProgram
+
 
 problems = [
     {'Description': 'Exercise 5.3, First Example',

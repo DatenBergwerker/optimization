@@ -1,7 +1,10 @@
 import sys
-sys.path.append("")
+sys.path.append('')
+
 import numpy as np
-from kruskal import kruskal_mst
+
+from LinearOptimization.kruskal import kruskal_mst
+
 
 incidence_matrix = np.array([
     [1, 1, 0, 0, 0, 0, 0, 0, 0],

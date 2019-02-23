@@ -2,7 +2,7 @@ import sys
 sys.path.append('')
 
 import numpy as np
-from dikin import LinearProgram, dikin_interior_points
+from LinearOptimization.dikin import LinearProgram, dikin_interior_points
 
 
 problems = [

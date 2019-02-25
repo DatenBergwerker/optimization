@@ -126,17 +126,17 @@ def steepest_descent(gradf, f, x_start: np.array, epsilon: float = 10e-3, x_dim:
 if __name__ == '__main__':
     x_c1 = np.array([1, -0.5]).reshape((1, 2))
     x_c1_opt = steepest_descent(f=rosenbrock, gradf=rosenbrock_gradient, x_start=x_c1)
-    x_c1_opt_vals = x_c1['iterates']
+    x_c1_opt_vals = x_c1_opt['iterates']
 
     plt.plot(x_c1_opt_vals[:, 0], x_c1_opt_vals[:, 1])
-    plt.show()
+    plt.savefig('ex2_c1.png')
 
     x_c2 = np.array([-1.2, 1]).reshape((1, 2))
     x_c2_opt = steepest_descent(f=rosenbrock, gradf=rosenbrock_gradient, x_start=x_c2)
-    x_c2_opt_vals = x_c2['iterates']
+    x_c2_opt_vals = x_c2_opt['iterates']
 
     plt.plot(x_c2_opt_vals[:, 0], x_c2_opt_vals[:, 1])
-    plt.show()
+    plt.savefig('ex2_c2.png')
 
     x_d1 = np.array([1])
     x_d1_opt = steepest_descent(f=function_exercise_d, gradf=function_exercise_d_gradient,

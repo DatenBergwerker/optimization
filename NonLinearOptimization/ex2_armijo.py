@@ -121,8 +121,9 @@ def steepest_descent(gradf, f, x_start: np.array, epsilon: float = 10e-3, x_dim:
     if iteration == maxit - 1:
         logging.info(f'Max iterations ({maxit}) reached')
 
+    params = x[iteration, :] if x_dim > 1 else x[iteration]
     logging.info(f'Optimization terminated at iteration {iteration + 1}. \n'
-                 f'Current function value {f(x[iteration, :])} with {x_dim} parameters {x[iteration, :]}')
+                 f'Current function value {f(x[iteration, :])} with {x_dim} parameters {params}')
 
     return {'iterates': x[0:iteration + 1, :], 'sigmas': stepsizes,
             'func_values': func_values, 'directions': directions}
@@ -154,8 +155,8 @@ if __name__ == '__main__':
 
     x_d2 = np.array([0.5])
     x_d2_opt = steepest_descent(f=function_exercise_d, gradf=function_exercise_d_gradient,
-                                x_start=x_d1, x_dim=1)
-    print(f'''Exercise d (1): \n
+                                x_start=x_d2, x_dim=1)
+    print(f'''Exercise d (2): \n
               Iterates': {x_d2_opt['iterates'][0:5,:].tolist()} \n
               Search Directions: {x_d2_opt['directions'][0:5]} \n
               Step lengths: {x_d2_opt['sigmas'][0:5]} \n
@@ -163,8 +164,8 @@ if __name__ == '__main__':
     
     x_d3 = np.array([0.1])
     x_d3_opt = steepest_descent(f=function_exercise_d, gradf=function_exercise_d_gradient,
-                                x_start=x_d1, x_dim=1)
-    print(f'''Exercise d (1): \n
+                                x_start=x_d3, x_dim=1)
+    print(f'''Exercise d (3): \n
               Iterates': {x_d3_opt['iterates'][0:5,:].tolist()} \n
               Search Directions: {x_d3_opt['directions'][0:5]} \n
               Step lengths: {x_d3_opt['sigmas'][0:5]} \n

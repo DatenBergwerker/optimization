@@ -1,4 +1,5 @@
 import logging
+import warnings
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,6 +7,9 @@ import matplotlib.pyplot as plt
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
+
+# filter out warnings regarding double precision of fractions
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 def function_exercise_d(x: np.array):
@@ -109,6 +113,7 @@ def steepest_descent(gradf, f, x_start: np.array, epsilon: float = 10e-3, x_dim:
         if sigma == 0:
             logging.info(f'No change for gradient with Armijo step rule in iteration {iteration + 1}')
             break
+
         x[iteration + 1, :] = x[iteration, :] + sigma * d
 
         iteration += 1
@@ -117,7 +122,7 @@ def steepest_descent(gradf, f, x_start: np.array, epsilon: float = 10e-3, x_dim:
         logging.info(f'Max iterations ({maxit}) reached')
 
     logging.info(f'Optimization terminated at iteration {iteration + 1}. \n'
-                 f'Current function value {f(x[iteration, :])} with x1, x2 parameters {x[iteration, :]}')
+                 f'Current function value {f(x[iteration, :])} with {x_dim} parameters {x[iteration, :]}')
 
     return {'iterates': x[0:iteration + 1, :], 'sigmas': stepsizes,
             'func_values': func_values, 'directions': directions}
